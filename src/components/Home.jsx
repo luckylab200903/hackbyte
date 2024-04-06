@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   useDisclosure,
   Button,
@@ -8,75 +9,56 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Input,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-
 import backgroundImage from "../../images/image2.jpg";
+
 const Home = () => {
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const datajson = [
+    // Your data items...
     {
       title: "Item 1",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      title: "Item 1",
+      title: "Item 2",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      title: "Item 1",
+      title: "Item 3",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      title: "Item 1",
+      title: "Hello",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
-    {
-      title: "Item 1",
-      description: "Description for Item 1",
-      imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
-    },
-    {
-      title: "Item 1",
-      description: "Description for Item 1",
-      imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
-    },
-    {
-      title: "Item 1",
-      description: "Description for Item 1",
-      imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
-    },
-    {
-      title: "Item 1",
-      description: "Description for Item 1",
-      imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
-    },
-    {
-      title: "Item 1",
-      description: "Description for Item 1",
-      imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
-    },
-    // Other data items...
   ];
 
-  // Use useDisclosure to manage the modal state
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [loading, setLoading] = useState(false); // State variable to manage loading state
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+  }, []);
 
   const handleClick = () => {
-    onOpen(); // Open the modal when the "ADD+" button is clicked
+    onOpen();
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value); // Update search term
   };
 
   const handleFileSelect = (e) => {
@@ -84,37 +66,52 @@ const Home = () => {
     console.log(files);
   };
 
+  // Filter data based on search term
+  const filteredData = datajson.filter((data) =>
+    data.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div
       className="px-4 lg:px-0 py-8 flex h-screen"
       style={{
-        backgroundImage: `url(${backgroundImage})`, // Set background image
+        backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
       }}
     >
       <div className="w-1/5 text-white">
-        <button
-          onClick={handleClick}
-          className="bg-white text-black text-gray-600 font-bold p-6 text-xl mx-12 mt-4 rounded-lg w-1/2 hover:bg-gray-300 hover:text-gray-700 transition-colors duration-300"
-        >
-          ADD+
-        </button>
+        <div className="flex justify-center items-center">
+          <Input
+            placeholder="Search Pdfs"
+            htmlSize={20}
+            width="auto"
+            onChange={handleSearch}
+            style={{ border: "1px solid gray", color: "black" }}
+          />
+        </div>
+        <div className="flex justify-center items-center">
+          <button
+            onClick={handleClick}
+            className="bg-white text-black text-gray-600 font-bold p-6 text-xl mx-12 mt-4 rounded-lg w-1/2 hover:bg-gray-300 hover:text-gray-700 transition-colors duration-300"
+          >
+            ADD+
+          </button>
+        </div>
       </div>
 
-      <div className="w-4/5 overflow-x-hidden">
+      <div className="w-4/5 overflow-x-hidden mr-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-          {/* Render either data items or skeleton based on data availability */}
-          {datajson.length === 0
+          {filteredData.length === 0
             ? Array.from({ length: 8 }).map((_, index) => (
                 <Skeleton key={index} />
               ))
-            : datajson.map((data, index) => (
+            : filteredData.map((data, index) => (
                 <Card
                   key={index}
                   title={data.title}
                   description={data.description}
                   imageUrl={data.imageUrl}
-                  isLoading={loading} // Pass the loading state variable
+                  isLoading={loading}
                 />
               ))}
         </div>
@@ -178,7 +175,6 @@ const Skeleton = () => {
   );
 };
 
-// Card component with skeleton layout
 const Card = ({ title, description, imageUrl, isLoading }) => {
   return (
     <div
@@ -186,9 +182,7 @@ const Card = ({ title, description, imageUrl, isLoading }) => {
         isLoading ? "bg-gray-300" : ""
       }`}
     >
-      {/* Conditionally render skeleton effect when loading */}
       {isLoading && <Skeleton />}
-      {/* Render card content when not loading */}
       {!isLoading && (
         <>
           {imageUrl && (
@@ -199,9 +193,9 @@ const Card = ({ title, description, imageUrl, isLoading }) => {
             />
           )}
           <div className="p-3 bg-white">
-            <h3 className="text-lg font-bold mb-2 text-white">{title}</h3>
-            <p className="text-gray-700 line-clamp-3">{description}</p>
-            <p className="text-gray-700">{imageUrl}</p>
+            <h3 className="text-lg font-bold mb-2 text-black">{title}</h3>
+            {/* <p className="text-gray-700 line-clamp-3">{description}</p>
+            <p className="text-gray-700">{imageUrl}</p> */}
           </div>
         </>
       )}
