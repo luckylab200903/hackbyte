@@ -1,7 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Login = () => {
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const handlesubmit = () => {
+    // Construct FormData object
+    const formData = new FormData();
+    formData.append("email",email );
+    formData.append("password", password);
+    fetch("/api/v1/login", {
+      method: "POST",
+      body: formData
+    })
+    .then(response => {
+      // Handle response
+  
+    })
+    .catch(error => {
+      // Handle error
+    });
+  };
   return (
     <div className="flex flex-col lg:flex-row h-screen">
       <div className="lg:w-1/2 h-full flex flex-col bg-gradient-to-r from-blue-500 to-blue-700 justify-center items-center">
@@ -18,6 +37,7 @@ const Login = () => {
               className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="username"
               type="text"
+              value={email}
               placeholder="Enter your Email"
             />
           </div>
@@ -32,6 +52,7 @@ const Login = () => {
               className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
               type="password"
+              value={password}
               placeholder="Enter your password"
             />
           </div>
@@ -39,6 +60,7 @@ const Login = () => {
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
               type="button"
+              onClick={handlesubmit}
             >
               Sign In
             </button>
