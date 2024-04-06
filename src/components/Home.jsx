@@ -12,28 +12,35 @@ import {
   Input,
 } from "@chakra-ui/react";
 import backgroundImage from "../../images/image2.jpg";
+import axios from "axios"; // Import axios
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
-  const datajson = [
-    // Your data items...
-    {
-      title: "Item 1",
-      description: "Description for Item 1",
-      imageUrl:
-        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
-    },
-    // Add more items as needed...
-  ];
-
+  const [cards, setCards] = useState([]); // State for cards
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 5000);
+    axios
+      .get("https://8f5c-14-139-241-214.ngrok-free.app/api/v1/user")
+      .then((response) => {
+        console.log(response.body);
+        // Check if the response data is an array before setting the state
+        if (Array.isArray(response.data)) {
+          setCards(response.data);
+        } else {
+          console.error(
+            "Expected an array of cards, but received:",
+            response.data
+          );
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching cards:", error);
+        setLoading(false);
+      });
   }, []);
 
   const handleClick = () => {
@@ -46,40 +53,39 @@ const Home = () => {
 
   const handleFileSelect = async (e) => {
     const files = e.target.files;
-    console.log("====================================");
-    console.log(files);
-    console.log("====================================");
     if (files.length > 0) {
       const file = files[0]; // Assuming you're only uploading one file
       const formData = new FormData();
       formData.append("file", file); // Assuming the API expects the file under the key "file"
-      console.log("====================================");
-      console.log(formData);
-      console.log("====================================");
+      const token = localStorage.getItem("token");
       try {
-        const response = await fetch(
-          "https://15c2-14-139-241-214.ngrok-free.app/api/v1/file",
+        setLoading(true); // Start loading
+        const response = await axios.post(
+          "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/file",
+          formData,
           {
-            method: "POST",
-            body: formData,
+            headers: {
+              Authorization: `Token ${token}`, // Include the token in the Authorization header
+            },
           }
         );
 
-        if (!response.ok) {
+        if (response.status !== 200) {
           throw new Error("Network response was not ok");
         }
 
-        const data = await response.json();
-        console.log("File uploaded successfully:", data);
+        console.log("File uploaded successfully:", response.data);
       } catch (error) {
-        console.error("Error uploading file:", error);
+        console.error("Error uploading file:", error.message);
+      } finally {
+        setLoading(false); // End loading
       }
     }
   };
 
   // Filter data based on search term
-  const filteredData = datajson.filter((data) =>
-    data.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCards = cards.filter((card) =>
+    card.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -112,16 +118,16 @@ const Home = () => {
 
       <div className="w-4/5 overflow-x-hidden mr-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-          {filteredData.length === 0
+          {filteredCards.length === 0
             ? Array.from({ length: 8 }).map((_, index) => (
                 <Skeleton key={index} />
               ))
-            : filteredData.map((data, index) => (
+            : filteredCards.map((card, index) => (
                 <Card
                   key={index}
-                  title={data.title}
-                  description={data.description}
-                  imageUrl={data.imageUrl}
+                  title={card.title}
+                  description={card.description}
+                  imageUrl={card.imageUrl}
                   isLoading={loading}
                 />
               ))}

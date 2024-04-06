@@ -1,31 +1,52 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Import axios
+
 const Login = () => {
-  const navigate=useNavigate()
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
-  
-  const handlesubmit = async () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState(""); // Corrected to camelCase
+  const [password, setPassword] = useState(""); // Corrected to camelCase
+
+  const getCSRFToken = () => {
+    if (typeof document !== "undefined") {
+      const cookieValue = document.cookie
+        .split("; ")
+        .find((cookie) => cookie.startsWith("csrftoken="))
+        ?.split("=")[1];
+      return cookieValue;
+    }
+    return null;
+  };
+
+  const csrfToken = getCSRFToken();
+  axios.defaults.headers.common["X-CSRFToken"] = csrfToken;
+
+  const handleSubmit = async () => {
+    // Corrected to camelCase
     try {
       // Construct FormData object
       const formData = new FormData();
       formData.append("email", email);
       formData.append("password", password);
 
-      const response = await fetch("https://15c2-14-139-241-214.ngrok-free.app/api/v1/login", {
-        method: "POST",
-        body: formData,
-      });
+      // Using Axios for the POST request
+      const response = await axios.post(
+        "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/login",
+        formData
+      );
+      const token = response.data.token;
+      localStorage.setItem("token", token);
 
-      if (!response.ok) {
-        throw new Error("Failed to login");
+      if (response.status === 200) {
+        console.log("====================================");
+        console.log(response.status);
+        console.log("====================================");
+        navigate("/home");
       }
-      navigate("/home")
 
       // Handle response
       console.log("response from backend", response);
-
     } catch (error) {
       // Handle error
       console.log("error in posting", error.message);
@@ -50,7 +71,7 @@ const Login = () => {
               name="email"
               type="text"
               value={email}
-              onChange={(e) => setemail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)} // Corrected to camelCase
               placeholder="Enter your Email"
             />
           </div>
@@ -67,7 +88,7 @@ const Login = () => {
               name="password"
               type="password"
               value={password}
-              onChange={(e)=>setpassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)} // Corrected to camelCase
               placeholder="Enter your password"
             />
           </div>
@@ -75,7 +96,7 @@ const Login = () => {
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
               type="button"
-              onClick={handlesubmit}
+              onClick={handleSubmit} // Corrected to camelCase
             >
               Sign In
             </button>

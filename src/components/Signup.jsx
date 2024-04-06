@@ -1,30 +1,32 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Import axios
+
 const Signup = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
   const handleSubmit = async () => {
-    console.log("hello");
     try {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("email", email);
       formData.append("password", password);
-      console.log("formdata", formData);
 
-      const response = await fetch("https://15c2-14-139-241-214.ngrok-free.app/api/v1/register", {
-        method: "POST",
-        body: formData,
-      });
+      // Use Axios for the POST request
+      const response = await axios.post(
+        "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/register",
+        formData
+      );
+      const token = response.data.token;
+      localStorage.setItem("token", token);
 
-      if (!response.ok) {
-        throw new Error("Failed to register");
+      if (response.status === 200) {
+        navigate("/home");
       }
-      navigate("/home")
-      console.log("response from backend", response);
     } catch (error) {
       console.log("error in posting", error.message);
     }
