@@ -18,55 +18,55 @@ const Home = () => {
       title: "Item 1",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
       title: "Item 1",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
       title: "Item 1",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
       title: "Item 1",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
       title: "Item 1",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
       title: "Item 1",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
       title: "Item 1",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
       title: "Item 1",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     {
       title: "Item 1",
       description: "Description for Item 1",
       imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
     // Other data items...
   ];
@@ -199,9 +199,9 @@ const Card = ({ title, description, imageUrl, isLoading }) => {
             />
           )}
           <div className="p-3 bg-white">
-            <h3 className="text-lg font-bold mb-2 text-white">{title}</h3>
-            <p className="text-gray-700 line-clamp-3">{description}</p>
-            <p className="text-gray-700">{imageUrl}</p>
+            <h3 className="text-lg font-bold mb-2 text-black">{title}</h3>
+            {/* <p className="text-gray-700 line-clamp-3">{description}</p>
+            <p className="text-gray-700">{imageUrl}</p> */}
           </div>
         </>
       )}
