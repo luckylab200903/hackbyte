@@ -23,24 +23,7 @@ const Home = () => {
       imageUrl:
         "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
     },
-    {
-      title: "Item 2",
-      description: "Description for Item 1",
-      imageUrl:
-        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      title: "Item 3",
-      description: "Description for Item 1",
-      imageUrl:
-        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
-      title: "Hello",
-      description: "Description for Item 1",
-      imageUrl:
-        "https://images.unsplash.com/photo-1711658364398-b7b697baf4e2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzMXx8fGVufDB8fHx8fA%3D%3D",
-    },
+    // Add more items as needed...
   ];
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -61,9 +44,37 @@ const Home = () => {
     setSearchTerm(e.target.value); // Update search term
   };
 
-  const handleFileSelect = (e) => {
+  const handleFileSelect = async (e) => {
     const files = e.target.files;
+    console.log("====================================");
     console.log(files);
+    console.log("====================================");
+    if (files.length > 0) {
+      const file = files[0]; // Assuming you're only uploading one file
+      const formData = new FormData();
+      formData.append("file", file); // Assuming the API expects the file under the key "file"
+      console.log("====================================");
+      console.log(formData);
+      console.log("====================================");
+      try {
+        const response = await fetch(
+          "https://15c2-14-139-241-214.ngrok-free.app/api/v1/file",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        console.log("File uploaded successfully:", data);
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+    }
   };
 
   // Filter data based on search term
