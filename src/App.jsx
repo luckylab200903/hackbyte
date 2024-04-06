@@ -5,6 +5,7 @@ import Signup from "./components/Signup";
 import Home from "./components/Home";
 import Nopage from "./components/Nopage";
 import { ChakraProvider } from "@chakra-ui/react";
+import Readpage from "./components/ReadingPage/readpage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Login />} />
+            <Route path="/pdf" element={<Readpage />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/home" element={<Home />} />
             <Route path="*" element={<Nopage />} />

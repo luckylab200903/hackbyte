@@ -1,0 +1,16 @@
+/* PdfViewer.css */
+
+.pdf-viewer-container {
+  height: 95vh;
+  padding-left: 10.5em;
+  overflow: auto; /* Enable scrolling if content overflows */
+}
+
+.pdf-viewer-container::-webkit-scrollbar {
+  display: none;
+}
+
+.pdf-viewer-container {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
