@@ -9,16 +9,11 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 
+import backgroundImage from "../../images/image2.jpg";
 const Home = () => {
   const datajson = [
-    {
-      title: "Item 1",
-      description: "Description for Item 1",
-      imageUrl:
-        "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600",
-    },
     {
       title: "Item 1",
       description: "Description for Item 1",
@@ -78,16 +73,25 @@ const Home = () => {
 
   // Use useDisclosure to manage the modal state
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [loading, setLoading] = useState(false); // State variable to manage loading state
 
   const handleClick = () => {
     onOpen(); // Open the modal when the "ADD+" button is clicked
   };
+
   const handleFileSelect = (e) => {
     const files = e.target.files;
     console.log(files);
   };
+
   return (
-    <div className="px-4 lg:px-0 py-8 flex h-screen bg-black">
+    <div
+      className="px-4 lg:px-0 py-8 flex h-screen"
+      style={{
+        backgroundImage: `url(${backgroundImage})`, // Set background image
+        backgroundSize: "cover",
+      }}
+    >
       <div className="w-1/5 text-white">
         <button
           onClick={handleClick}
@@ -99,14 +103,20 @@ const Home = () => {
 
       <div className="w-4/5 overflow-x-hidden">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-          {datajson.map((data, index) => (
-            <Card
-              key={index}
-              title={data.title}
-              description={data.description}
-              imageUrl={data.imageUrl}
-            />
-          ))}
+          {/* Render either data items or skeleton based on data availability */}
+          {datajson.length === 0
+            ? Array.from({ length: 8 }).map((_, index) => (
+                <Skeleton key={index} />
+              ))
+            : datajson.map((data, index) => (
+                <Card
+                  key={index}
+                  title={data.title}
+                  description={data.description}
+                  imageUrl={data.imageUrl}
+                  isLoading={loading} // Pass the loading state variable
+                />
+              ))}
         </div>
       </div>
       <Modal isOpen={isOpen} onClose={onClose} size="lg">
@@ -155,21 +165,46 @@ const Home = () => {
   );
 };
 
-const Card = ({ title, description, imageUrl }) => {
+const Skeleton = () => {
   return (
-    <div className="hoverborder border-white shadow-md overflow-hidden rounded onhover hover:scale-105 transition-transform duration-300">
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-40 object-cover rounded-t-lg"
-        />
-      )}
+    <div className="animate-pulse bg-gray-200 rounded">
+      <div className="w-full h-40 rounded-t-lg"></div>
       <div className="p-3 bg-white">
-        <h3 className="text-lg font-bold mb-2 text-white">{title}</h3>
-        <p className="text-gray-700 line-clamp-3">{description}</p>
-        <p className="text-gray-700">{imageUrl}</p>
+        <h3 className="text-lg font-bold mb-2 text-transparent bg-gray-300 h-7 w-3/4"></h3>
+        <p className="text-gray-700 line-clamp-3 bg-gray-300 h-5 w-full"></p>
+        <p className="text-gray-700 bg-gray-300 h-5 w-1/2"></p>
       </div>
+    </div>
+  );
+};
+
+// Card component with skeleton layout
+const Card = ({ title, description, imageUrl, isLoading }) => {
+  return (
+    <div
+      className={`hover:border border-white shadow-md overflow-hidden rounded onhover hover:scale-105 transition-transform duration-300 ${
+        isLoading ? "bg-gray-300" : ""
+      }`}
+    >
+      {/* Conditionally render skeleton effect when loading */}
+      {isLoading && <Skeleton />}
+      {/* Render card content when not loading */}
+      {!isLoading && (
+        <>
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt={title}
+              className="w-full h-40 object-cover rounded-t-lg"
+            />
+          )}
+          <div className="p-3 bg-white">
+            <h3 className="text-lg font-bold mb-2 text-white">{title}</h3>
+            <p className="text-gray-700 line-clamp-3">{description}</p>
+            <p className="text-gray-700">{imageUrl}</p>
+          </div>
+        </>
+      )}
     </div>
   );
 };
