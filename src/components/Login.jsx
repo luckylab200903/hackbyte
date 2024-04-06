@@ -1,26 +1,37 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 const Login = () => {
+  const navigate=useNavigate()
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-  const handlesubmit = () => {
-    // Construct FormData object
-    const formData = new FormData();
-    formData.append("email",email );
-    formData.append("password", password);
-    fetch("/api/v1/login", {
-      method: "POST",
-      body: formData
-    })
-    .then(response => {
-      // Handle response
   
-    })
-    .catch(error => {
+  const handlesubmit = async () => {
+    try {
+      // Construct FormData object
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("password", password);
+
+      const response = await fetch("https://15c2-14-139-241-214.ngrok-free.app/api/v1/login", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to login");
+      }
+      navigate("/home")
+
+      // Handle response
+      console.log("response from backend", response);
+
+    } catch (error) {
       // Handle error
-    });
+      console.log("error in posting", error.message);
+    }
   };
+
   return (
     <div className="flex flex-col lg:flex-row h-screen">
       <div className="lg:w-1/2 h-full flex flex-col bg-gradient-to-r from-yellow-600 to-yellow-700 justify-center items-center">
@@ -36,8 +47,10 @@ const Login = () => {
             <input
               className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="username"
+              name="email"
               type="text"
               value={email}
+              onChange={(e) => setemail(e.target.value)}
               placeholder="Enter your Email"
             />
           </div>
@@ -51,8 +64,10 @@ const Login = () => {
             <input
               className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
+              name="password"
               type="password"
               value={password}
+              onChange={(e)=>setpassword(e.target.value)}
               placeholder="Enter your password"
             />
           </div>

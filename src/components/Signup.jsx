@@ -1,12 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithubSquare, faGoogle } from "@fortawesome/free-brands-svg-icons";
-
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
-  const handleclick=()=>{
-    
-  }
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+
+  const handleSubmit = async () => {
+    console.log("hello");
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      console.log("formdata", formData);
+
+      const response = await fetch("https://15c2-14-139-241-214.ngrok-free.app/api/v1/register", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to register");
+      }
+      navigate("/home")
+      console.log("response from backend", response);
+    } catch (error) {
+      console.log("error in posting", error.message);
+    }
+  };
+
   return (
     <div className="flex flex-col lg:flex-row h-screen">
       <div className="lg:w-1/2 h-full bg-gradient-to-r from-blue-500 to-blue-700 flex flex-col justify-center items-center">
@@ -22,21 +45,27 @@ const Signup = () => {
             <input
               className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="email"
+              name="email"
               type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
             />
           </div>
           <div className="mb-4 w-full">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"
-              htmlFor="username"
+              htmlFor="name"
             >
               Username:
             </label>
             <input
               className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="username"
+              id="name"
+              name="name"
               type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Choose your username"
             />
           </div>
@@ -50,20 +79,18 @@ const Signup = () => {
             <input
               className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
+              name="password"
               type="password"
               placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
-          </div>
-          <div
-            className="flex mx-6 m-4 gap-8"
-          >
-            <FontAwesomeIcon onClick={handleclick} style={{ cursor: "pointer" }} icon={faGithubSquare} className="mr-2" size="2x" />
-            <FontAwesomeIcon onClick={handleclick} style={{ cursor: "pointer" }} icon={faGoogle} className="mr-2" size="2x" />
           </div>
           <div className="flex flex-col items-center justify-center w-full">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="button"
+              onClick={handleSubmit}
             >
               Sign Up
             </button>
