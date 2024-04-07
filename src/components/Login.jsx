@@ -32,7 +32,7 @@ const Login = () => {
 
       // Using Axios for the POST request
       const response = await axios.post(
-        "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/login",
+        "https://bb7c-14-139-241-214.ngrok-free.app/api/v1/login",
         formData
       );
       const token = response.data.token;

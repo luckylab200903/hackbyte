@@ -17,17 +17,18 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [pdfs, setPdfs] = useState([]); // Changed to pdfs to reflect the data structure
+  const [pdfs, setPdfs] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     const getUser = async () => {
       setLoading(true);
       const token = localStorage.getItem("token");
       try {
         const response = await axios.post(
-          "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/user",
+          "https://bb7c-14-139-241-214.ngrok-free.app/api/v1/user",
           {},
           {
             headers: {
@@ -35,7 +36,6 @@ const Home = () => {
             },
           }
         );
-        // Extract the pdfs array from the response
         const pdfs = response.data.user.pdfs;
         setPdfs(pdfs);
         setLoading(false);
@@ -64,7 +64,7 @@ const Home = () => {
       try {
         setLoading(true);
         const response = await axios.post(
-          "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/file",
+          "https://bb7c-14-139-241-214.ngrok-free.app/api/v1/file",
           formData,
           {
             headers: {
@@ -78,8 +78,7 @@ const Home = () => {
         }
 
         console.log("File uploaded successfully:", response.data);
-        // After successful upload, fetch the updated list of PDFs
-        getUser(); // Call the getUser function to update the state
+        getUser();
       } catch (error) {
         console.error("Error uploading file:", error.message);
       } finally {
@@ -93,10 +92,12 @@ const Home = () => {
   );
 
   const navigateToPdf = (pdfId) => {
-    console.log("====================================");
-    console.log(pdfId);
-    console.log("====================================");
     navigate(`/pdf/${pdfId}`);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
   };
 
   return (
@@ -125,6 +126,14 @@ const Home = () => {
             ADD+
           </button>
         </div>
+        <div className="flex justify-center items-center">
+          <button
+            onClick={logout}
+            className="bg-red-500 text-white px-4 py-2 rounded-lg mt-4 ml-4"
+          >
+            Logout
+          </button>
+        </div>
       </div>
 
       <div className="w-4/5 overflow-x-hidden mr-6">
@@ -140,7 +149,7 @@ const Home = () => {
                   description={pdf.file_url}
                   imageUrl="https://images.unsplash.com/photo-1711580299297-a57d3d6b8f04?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw3fHx8ZW58MHx8fHx8"
                   isLoading={loading}
-                  onClick={() => navigateToPdf(pdf.id)} // Pass the navigateToPdf function to the Card component
+                  onClick={() => navigateToPdf(pdf.id)}
                 />
               ))}
         </div>
@@ -210,7 +219,7 @@ const Card = ({ title, description, imageUrl, isLoading, onClick }) => {
       className={`hover:border border-white shadow-md overflow-hidden rounded onhover hover:scale-105 transition-transform duration-300 ${
         isLoading ? "bg-gray-300" : ""
       }`}
-      onClick={onClick} // Use the onClick prop to handle clicks
+      onClick={onClick}
     >
       {isLoading && <Skeleton />}
       {!isLoading && (
@@ -224,8 +233,6 @@ const Card = ({ title, description, imageUrl, isLoading, onClick }) => {
           )}
           <div className="p-3 bg-white">
             <h3 className="text-lg font-bold mb-2 text-black">{title}</h3>
-            {/* <p className="text-gray-700 line-clamp-3">{description}</p>
-            <p className="text-gray-700">{imageUrl}</p> */}
           </div>
         </>
       )}

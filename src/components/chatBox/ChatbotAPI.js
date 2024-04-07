@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API = {
   GetChatbotResponse: async (pdfid, message) => {
-    const apiUrl = "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/chat";
+    const apiUrl = "https://bb7c-14-139-241-214.ngrok-free.app/api/v1/chat";
     const token = localStorage.getItem("token");
 
     try {

@@ -8,17 +8,16 @@ import Input from "./Input";
 import API from "./ChatbotAPI.js";
 
 import "./styles.css";
+import { useParams } from "react-router-dom";
 
 function Chatbot() {
+  const { pdfid } = useParams();
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     async function loadWelcomeMessage() {
       setMessages([
-        <BotMessage
-          key="0"
-          fetchMessage={async () => await API.GetChatbotResponse("hi")}
-        />,
+        <BotMessage key="0" fetchMessage={"Hello I am PDF Buddy"} />,
       ]);
     }
     loadWelcomeMessage();
@@ -29,7 +28,7 @@ function Chatbot() {
       <UserMessage key={messages.length + 1} text={text} />,
       <BotMessage
         key={messages.length + 2}
-        fetchMessage={async () => await API.GetChatbotResponse(text)}
+        fetchMessage={async () => await API.GetChatbotResponse(pdfid, text)}
       />
     );
     setMessages(newMessages);

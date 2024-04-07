@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Import axios
+import axios from "axios";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -16,17 +15,14 @@ const Signup = () => {
       formData.append("email", email);
       formData.append("password", password);
 
-      // Use Axios for the POST request
       const response = await axios.post(
-        "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/register",
+        "https://bb7c-14-139-241-214.ngrok-free.app/api/v1/register",
         formData
       );
       const token = response.data.token;
       localStorage.setItem("token", token);
 
-      if (response.status === 200) {
-        navigate("/home");
-      }
+      navigate("/");
     } catch (error) {
       console.log("error in posting", error.message);
     }

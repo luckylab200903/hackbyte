@@ -23,7 +23,7 @@ const PdfViewer = () => {
     const fetchPdf = async (pdfid) => {
       try {
         const response = await axios.post(
-          "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/pdf",
+          "https://bb7c-14-139-241-214.ngrok-free.app/api/v1/pdf",
           { pdf_id: pdfid }, // Ensure this matches the server's expected parameter name
           {
             headers: {
