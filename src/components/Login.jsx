@@ -46,7 +46,7 @@ const Login = () => {
       }
 
       // Handle response
-      console.log("response from backend", response);
+      console.log("response from backend", response.body);
     } catch (error) {
       // Handle error
       console.log("error in posting", error.message);

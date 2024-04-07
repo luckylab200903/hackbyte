@@ -4,31 +4,53 @@ import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
 import "@react-pdf-viewer/core/lib/styles/index.css";
 import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 import "./PdfViewer.css";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const PdfViewer = () => {
   const [pdfUrl, setPdfUrl] = useState(null);
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  const { pdfid } = useParams();
 
   useEffect(() => {
-    const fetchPdf = async () => {
-      const pdf =
-        "https://www.aeee.in/wp-content/uploads/2020/08/Sample-pdf.pdf";
-      setPdfUrl(pdf);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("No token found in localStorage.");
+      return;
+    }
+    console.log(token);
+
+    const fetchPdf = async (pdfid) => {
+      try {
+        const response = await axios.post(
+          "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/pdf",
+          { pdf_id: pdfid }, // Ensure this matches the server's expected parameter name
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+        const pdfUrl = response.data.file_url;
+        console.log("====================================");
+        console.log(pdfUrl);
+        console.log("====================================");
+        console.log(response);
+        setPdfUrl(pdfUrl);
+      } catch (error) {
+        console.error("Error fetching PDF URL:", error);
+      }
     };
 
-    fetchPdf();
-  }, [pdfUrl]);
+    fetchPdf(pdfid);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    const fileUrl = URL.createObjectURL(file);
-    console.log(fileUrl);
-    setPdfUrl(fileUrl);
-  };
+    // if (pdfid) {
+    //   fetchPdf();
+    // }
+  }, [pdfid]);
 
   return (
     <div className="pdf-viewer-container">
-      {/* <input type="file" accept=".pdf" onChange={handleFileChange} /> */}
       <Worker
         workerUrl={`https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js`}
       >

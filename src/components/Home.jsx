@@ -12,60 +12,63 @@ import {
   Input,
 } from "@chakra-ui/react";
 import backgroundImage from "../../images/image2.jpg";
-import axios from "axios"; // Import axios
+import axios from "axios";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const [searchTerm, setSearchTerm] = useState(""); // State for search term
-  const [cards, setCards] = useState([]); // State for cards
+  const [searchTerm, setSearchTerm] = useState("");
+  const [pdfs, setPdfs] = useState([]); // Changed to pdfs to reflect the data structure
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
-    setLoading(true);
-    axios
-      .get("https://8f5c-14-139-241-214.ngrok-free.app/api/v1/user")
-      .then((response) => {
-        console.log(response.body);
-        // Check if the response data is an array before setting the state
-        if (Array.isArray(response.data)) {
-          setCards(response.data);
-        } else {
-          console.error(
-            "Expected an array of cards, but received:",
-            response.data
-          );
-        }
+    const getUser = async () => {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(
+          "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/user",
+          {},
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          }
+        );
+        // Extract the pdfs array from the response
+        const pdfs = response.data.user.pdfs;
+        setPdfs(pdfs);
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching cards:", error);
+      } catch (error) {
+        console.error("Error fetching PDFs:", error);
         setLoading(false);
-      });
+      }
+    };
+    getUser();
   }, []);
 
   const handleClick = () => {
     onOpen();
   };
-
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value); // Update search term
+    setSearchTerm(e.target.value);
   };
 
   const handleFileSelect = async (e) => {
     const files = e.target.files;
     if (files.length > 0) {
-      const file = files[0]; // Assuming you're only uploading one file
+      const file = files[0];
       const formData = new FormData();
-      formData.append("file", file); // Assuming the API expects the file under the key "file"
+      formData.append("file", file);
       const token = localStorage.getItem("token");
       try {
-        setLoading(true); // Start loading
+        setLoading(true);
         const response = await axios.post(
           "https://8f5c-14-139-241-214.ngrok-free.app/api/v1/file",
           formData,
           {
             headers: {
-              Authorization: `Token ${token}`, // Include the token in the Authorization header
+              Authorization: `Token ${token}`,
             },
           }
         );
@@ -75,18 +78,26 @@ const Home = () => {
         }
 
         console.log("File uploaded successfully:", response.data);
+        // After successful upload, fetch the updated list of PDFs
+        getUser(); // Call the getUser function to update the state
       } catch (error) {
         console.error("Error uploading file:", error.message);
       } finally {
-        setLoading(false); // End loading
+        setLoading(false);
       }
     }
   };
 
-  // Filter data based on search term
-  const filteredCards = cards.filter((card) =>
-    card.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPdfs = pdfs.filter((pdf) =>
+    pdf.file_url.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const navigateToPdf = (pdfId) => {
+    console.log("====================================");
+    console.log(pdfId);
+    console.log("====================================");
+    navigate(`/pdf/${pdfId}`);
+  };
 
   return (
     <div
@@ -118,17 +129,18 @@ const Home = () => {
 
       <div className="w-4/5 overflow-x-hidden mr-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-          {filteredCards.length === 0
+          {filteredPdfs.length === 0
             ? Array.from({ length: 8 }).map((_, index) => (
                 <Skeleton key={index} />
               ))
-            : filteredCards.map((card, index) => (
+            : filteredPdfs.map((pdf, index) => (
                 <Card
                   key={index}
-                  title={card.title}
-                  description={card.description}
-                  imageUrl={card.imageUrl}
+                  title={pdf.id}
+                  description={pdf.file_url}
+                  imageUrl="https://images.unsplash.com/photo-1711580299297-a57d3d6b8f04?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw3fHx8ZW58MHx8fHx8"
                   isLoading={loading}
+                  onClick={() => navigateToPdf(pdf.id)} // Pass the navigateToPdf function to the Card component
                 />
               ))}
         </div>
@@ -192,12 +204,13 @@ const Skeleton = () => {
   );
 };
 
-const Card = ({ title, description, imageUrl, isLoading }) => {
+const Card = ({ title, description, imageUrl, isLoading, onClick }) => {
   return (
     <div
       className={`hover:border border-white shadow-md overflow-hidden rounded onhover hover:scale-105 transition-transform duration-300 ${
         isLoading ? "bg-gray-300" : ""
       }`}
+      onClick={onClick} // Use the onClick prop to handle clicks
     >
       {isLoading && <Skeleton />}
       {!isLoading && (
